@@ -1,0 +1,35 @@
+{
+    "name": "mikhailovlab/crypto-pro-builder",
+    "description": "Обертка для работы с КриптоПро через CLI, позволяет гибко строить команды через цепочки вызовов, использовать динамические методы и адаптировать функционал под свои нужды.",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords": [
+		"КриптоПро",
+		"CryptoPro",
+        "framework",
+        "cli",
+        "cmd",
+        "query builder",
+		"DevTools",
+        "mikhailovlab"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitrii Mikhailov",
+            "email": "da.mikhailoff@gmail.com",
+            "homepage": "https://github.com/MikhailovLab"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+		"mikhailovlab/php-fluent-console": "v1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CryptoProBuilder\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
