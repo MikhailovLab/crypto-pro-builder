@@ -23,7 +23,7 @@
 
 - **Установленный КриптоПро CSP** - включая консольные утилиты csptest, cryptcp, cpverify, certmgr.
 
-- **mikhailovlab/php_fluent_console** - данная библиотека используется для запуска консольных команд и является зависимостью.
+- **mikhailovlab/php-fluent-console** - данная библиотека используется для запуска консольных команд и является зависимостью.
 
 
 ## Установка
@@ -220,7 +220,7 @@ private function throwError(): never
 ## Примеры использования
 Для работы с библиотекой нам необязательно погружаться в документацию, мы можем использовать шаблонные решения.
 
-По стандартной схеме, тестировать будем с использованием фреймворка Laravel 11, на операционной системе windows 10. Но вы можете использовать любую другую конфигурацию, главное не забудьте установить КриптоПро.
+По стандартной схеме, тестировать будем с использованием фреймворка Laravel 11, на операционной системе windows 10. Вы можете использовать любую другую конфигурацию (фреймворк, ОС и т.д.), главное — обеспечить корректную установку и доступность утилит КриптоПро.
 
 ### Получить список контейнеров 
 ```php
@@ -314,7 +314,7 @@ array:1 [▼ // app\Http\Controllers\TestController.php:25
 try{
     dd(new CryptoPro()
         ->deleteContainer($container)
-	    ->run()
+        ->run()
     );
     
 }catch (Exception $e){
@@ -371,16 +371,16 @@ array:1 [▼ // app\Http\Controllers\TestController.php:25
 try{
     dd(new CryptoPro()
         ->signDocument()
-		->in('H:\csp\123.txt')
-		->out('H:\csp\123.txt.sig')
-        ->password('1234') //пароль, если требуется
-		->my('00dad6c045c2ec4a01f20441daf2d8dd999aaf07') // Сертификат 
-		->addsigtime() //добавить время подписи, если требуется
-		->base64() // base64, если требуется
-		->detached() //отсоединенная подпись, если требуется
-		->add() //добавить сертификат, если требуется
+        ->in('H:\csp\123.txt')
+        ->out('H:\csp\123.txt.sig')
+        ->password('1234') //пароль, если требуется 
+        ->my('00dad6c045c2ec4a01f20441daf2d8dd999aaf07') // Сертификат 
+        ->addsigtime() //добавить время подписи, если требуется
+        ->base64() // base64, если требуется
+        ->detached() //отсоединенная подпись, если требуется
+        ->add() //добавить сертификат, если требуется
         ->silent() //не выводить окно с вводом пароля
-		->run()
+        ->run()
     );
     
 }catch (Exception $e){
@@ -404,8 +404,8 @@ $array = [
 try{
     dd(new CryptoPro("cryptcp")
         ->encoding('866') // windows консоль выдаст кириллицу в 866
-		->verifySignature($array)
-		->run()
+        ->verifySignature($array)
+        ->run()
     );
     
 }catch (Exception $e){
@@ -470,11 +470,11 @@ array:1 [▼ // app\Http\Controllers\TestController.php:26
 ```php
 try{
     dd(new CryptoPro("certmgr.exe") //не путать со встроенной windows утилитой 
-		->certificatInstall()
-		->file('H:\csp\Cert.cer') //установить из файла
-		//->cont($container) //установить из контейнера
-		->store('uMy')
-		->run()
+        ->certificatInstall()
+        ->file('H:\csp\Cert.cer') //установить из файла
+        //->cont($container) //установить из контейнера
+        ->store('uMy')
+        ->run()
     );
     
 }catch (Exception $e){
@@ -492,9 +492,9 @@ array:1 [▼ // app\Http\Controllers\TestController.php:26
 ```php
 try{
     dd(new CryptoPro("certmgr.exe") //не путать со встроенной windows утилитой 
-		->getCertificates()
-        ->encoding('866') // Windows консоль выдаст кириллицу в 866
-        ->store('uMy') 
+        ->getCertificates()
+        ->encoding('866') // Windows консоль выдаст кириллицу в 866 
+        ->store('uMy')
         ->run()
     );
     
@@ -530,11 +530,11 @@ array:12 [▼ // app\Http\Controllers\TestController.php:26
 ```php
 try{
     dd(new CryptoPro("certmgr.exe") //не путать со встроенной windows утилитой 
-		->getCertificateByTp()
+        ->getCertificateByTp()
         ->encoding('866')
-		->store('uMy')
-		->thumbprint('00dad6c045c2ec4a01f20441daf2d8dd999aaf07')
-		->run()
+        ->store('uMy')
+        ->thumbprint('00dad6c045c2ec4a01f20441daf2d8dd999aaf07')
+        ->run()
     );
     
 }catch (Exception $e){
@@ -556,10 +556,10 @@ array:5 [▼ // app\Http\Controllers\TestController.php:26
 ```php
 try{
     dd(new CryptoPro("certmgr.exe") //не путать со встроенной windows утилитой 
-		->deleteCertificate()
-		->store('uMy')
-		->thumbprint('00dad6c045c2ec4a01f20441daf2d8dd999aaf07')
-		->run()
+        ->deleteCertificate()
+        ->store('uMy')
+        ->thumbprint('00dad6c045c2ec4a01f20441daf2d8dd999aaf07')
+        ->run()
     );
     
 }catch (Exception $e){
@@ -576,13 +576,13 @@ array:1 [▼ // app\Http\Controllers\TestController.php:26
 ```php
 try{
     dd(new CryptoPro()
-		->registerMethods(['install', 'delete']) //зарегистрировать дополнительные методы
-		->addKey("-nochain") //пробросить кастомный аргумент или ключ
+        ->registerMethods(['install', 'delete']) //зарегистрировать дополнительные методы
+        ->addKey("-nochain") //пробросить кастомный аргумент или ключ
         ->encoding('866') //добавить кодировку, например из 866 в UTF-8 (для кириллицы в windows)
-        ->decoding() //вернуть исходную кодировку, если отдаем вывод в консоль
+        ->decoding() //вернуть исходную кодировку, если отдаем вывод в консоль 
         ->addPatterns(['patternname' => 'regexp']) //добавить кастомные паттерны для парсинга 
         ->usePattern("patternname") //использовать паттерн для парсинга 
-		->run()
+        ->run()
     );
     
 }catch (Exception $e){
