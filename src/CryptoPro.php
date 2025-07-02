@@ -228,6 +228,12 @@ class CryptoPro
         'createcert',      // cryptcp: создать запрос на сертификат, отправить его в ЦС
         'pendcert',        // cryptcp: проверить, не выпущен ли сертификат
         'sn',              // cryptcp: сохранить/показать серийный номер лицензии
+        'nochain',         // cryptcp: не включать цепочку сертификатов
+        'thumbprint',      // cryptcp: выбор сертификата по отпечатку
+
+        'install',         // certmgr: установить сертификат
+        'delete',          // certmgr: удалить сертификат
+        'file'             // certmgr: установить сертификат из файла
     ];
 
     /**
@@ -350,14 +356,19 @@ class CryptoPro
      */
     public function changeContainerPass(?string $container = null, ?string $newPass = null, ?string $currentPass = null): self
     {
-        if (!$container || !$currentPass || !$newPass) {
-            throw new InvalidArgumentException("Не выбран контейнер или не введены пароли.");
+        if (!$container || !$newPass) {
+            throw new InvalidArgumentException("Не выбран контейнер или пароль.");
         }
-
+    
         $this->passwd()
-            ->change($newPass)
-            ->cont($container)
-            ->password($currentPass); // Используем 'password' вместо 'passwd' для аргумента пароля
+             ->change($newPass)
+             ->cont($container);
+        
+
+        if (!empty($currentPass)) {
+            $this->passwd($currentPass);
+        }
+            
 
         return $this;
     }
@@ -497,12 +508,14 @@ class CryptoPro
         // Проверка, сколько файлов передано
         if (count($files) === 1) {
             // Присоединенная подпись - 1 файл
-            $this->attached();
-            $this->addKey(...$files); // Добавляем файлы как аргументы
+            $this->attached()
+                 ->nochain()
+                 ->addKey(...$files); // Добавляем файлы как аргументы
         } elseif (count($files) === 2) {
             // Отсоединенная подпись - 2 файла
-            $this->detached();
-            $this->addKey(...$files); // Добавляем файлы как аргументы
+            $this->detached()
+                 ->nochain()
+                 ->addKey(implode(' ', $files)); // Добавляем файлы как аргументы
         } else {
             // Обработка ошибки, если файлов больше двух или меньше одного
             throw new InvalidArgumentException("Неверное количество файлов во входном массиве. Ожидается 1 или 2 файла.");
@@ -543,7 +556,7 @@ class CryptoPro
     public function certificatInstall(): self
     {
         // Использование 'instcert' из методов cryptcp
-        $this->instcert();
+        $this->install();
 
         return $this;
     }
@@ -557,7 +570,7 @@ class CryptoPro
     {
         $this->pattern = $this->patterns['certificates']['patterns'];
         $this->expectedFields = $this->patterns['certificates']['fields'];
-        $this->structureMatches = true;
+        $this->structureMatches = true; // Структурировать плоский вывод
 
         $this->list();
 
@@ -573,7 +586,7 @@ class CryptoPro
     {
         $this->pattern = $this->patterns['certificates']['patterns'];
         $this->expectedFields = $this->patterns['certificates']['fields'];
-        $this->structureMatches = false; // Обычно для одного сертификата не нужна структура
+        $this->structureMatches = false; // Для одного сертификата не нужна структура
 
         $this->list();
 
@@ -588,7 +601,7 @@ class CryptoPro
     public function deleteCertificate(): self
     {
         // Использование 'delcert' из методов cryptcp
-        $this->delcert();
+        $this->delete();
 
         return $this;
     }
@@ -666,9 +679,9 @@ class CryptoPro
      * @param bool $structure True, если данные должны быть структурированы, false иначе.
      * @return self Возвращает текущий инстанс для цепочки вызовов.
      */
-    public function useStructure(bool $structure = false): self
+    public function useStructure(): self
     {
-        $this->structureMatches = $structure;
+        $this->structureMatches = true;
         return $this;
     }
 
@@ -681,18 +694,6 @@ class CryptoPro
     public function addPatterns(array $patterns): self
     {
         $this->patterns = array_merge($this->patterns, $patterns);
-        return $this;
-    }
-
-    /**
-     * Добавляет пользовательские методы к исходному массиву $methods.
-     *
-     * @param array $methods Массив методов для добавления.
-     * @return self Возвращает текущий инстанс для цепочки вызовов.
-     */
-    public function addMethods(array $methods): self
-    {
-        $this->methods = array_unique(array_merge($this->methods, $methods));
         return $this;
     }
 
